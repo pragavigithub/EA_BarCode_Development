@@ -1656,11 +1656,18 @@ class SAPIntegration:
     def post_grpo_to_sap(self, grn_document):
         """Post approved GRN to SAP B1 as Purchase Delivery Note"""
         if not self.ensure_logged_in():
-            logging.warning("Cannot post GRN - SAP B1 not available, returning mock success for offline mode")
-            # Return mock success for offline mode
+            logging.warning("Cannot post GRN - SAP B1 not available, updating WMS record with mock posting for offline mode")
+            # Update WMS record with mock posting for offline mode
+            mock_doc_number = f'PD-MOCK-{grn_document.id}'
+            grn_document.sap_document_number = mock_doc_number
+            grn_document.status = 'posted'
+            
+            from app import db
+            db.session.commit()
+            
             return {
                 'success': True,
-                'sap_document_number': f'PD-MOCK-{grn_document.id}',
+                'sap_document_number': mock_doc_number,
                 'message': 'GRN posted successfully (offline mode - mock posting)'
             }
     

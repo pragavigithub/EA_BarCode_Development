@@ -286,7 +286,7 @@
                             </div>
                             {% elif grn_doc.status == 'approved' and current_user.role in ['admin', 'manager'] %}
                             <div class="btn-group">
-                                <form method="POST" action="{{ url_for('post_grn_to_sap_manual', grn_id=grn_doc.id) }}" style="display: inline;">
+                                <form method="POST" action="{{ url_for('post_grn_to_sap_manual', grn_id=grn_doc.id) }}" style="display: inline;" id="sapPostForm">
                                     <button type="submit" class="btn btn-primary" id="postToSAPBtn" onclick="return postToSAPConfirm(this)">
                                         <i data-feather="upload"></i> Post to SAP B1
                                     </button>
