@@ -972,6 +972,16 @@ function postToSAPConfirm(button) {
     if (confirm('Post this GRN to SAP B1 as Purchase Delivery Note?')) {
         button.disabled = true;
         button.innerHTML = '<i data-feather="loader"></i> Posting...';
+        
+        // Re-enable button after 30 seconds if form doesn't submit properly
+        setTimeout(function() {
+            if (button.disabled) {
+                button.disabled = false;
+                button.innerHTML = '<i data-feather="upload"></i> Post to SAP B1';
+                console.log('Post button re-enabled due to timeout');
+            }
+        }, 30000);
+        
         return true;
     }
     return false;
