@@ -45,7 +45,7 @@ if os.environ.get("DATABASE_URL"):
     logging.info("✅ Using PostgreSQL database for Replit deployment")
 
 # Priority 2: MySQL (user's preferred database) - keep for local development
-if not database_url:
+elif not database_url:
     try:
         if (os.environ.get('DATABASE_URL', '').startswith('mysql')) or (
             os.environ.get('MYSQL_HOST') and 
