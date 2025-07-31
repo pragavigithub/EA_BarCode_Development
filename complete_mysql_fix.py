@@ -64,7 +64,40 @@ def complete_mysql_fix():
                 else:
                     print(f"⚠️ Error adding {column.split()[0]}: {e}")
         
-        print("📝 Step 3: Add missing branch columns...")
+        print("📝 Step 3: Ensure document_number_series table exists...")
+        # Create document_number_series table if not exists
+        try:
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS document_number_series (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                series_name VARCHAR(20) NOT NULL UNIQUE,
+                current_number INT DEFAULT 0,
+                prefix VARCHAR(10) DEFAULT '',
+                suffix VARCHAR(10) DEFAULT '',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            )
+            """)
+            print("✅ Document number series table ensured")
+            
+            # Insert default series if not exist
+            default_series = [
+                ('GRN', 0, 'GRN-', '-2025'),
+                ('TRANSFER', 0, 'TR-', '-2025'),
+                ('PICKLIST', 0, 'PL-', '-2025')
+            ]
+            
+            for series_name, current_num, prefix, suffix in default_series:
+                cursor.execute("""
+                INSERT IGNORE INTO document_number_series (series_name, current_number, prefix, suffix)
+                VALUES (%s, %s, %s, %s)
+                """, (series_name, current_num, prefix, suffix))
+                print(f"✅ Added default series: {series_name}")
+                
+        except Exception as e:
+            print(f"⚠️ Document series error: {e}")
+
+        print("📝 Step 4: Add missing branch columns...")
         branch_columns = [
             "description TEXT",
             "address TEXT", 

@@ -1750,7 +1750,7 @@ def post_grn_to_sap_manual(grn_id):
         logging.info(f"👤 Manual Post User: {current_user.username}")
         
         sap = SAPIntegration()
-        result = sap.post_grn_to_sap(grn_doc)
+        result = sap.post_grpo_to_sap(grn_doc)
         
         if result.get('success'):
             logging.info("=" * 100)
